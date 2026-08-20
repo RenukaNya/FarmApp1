@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; }
+
+/* ── Farm selector buttons ── */
+.farm-btn {
+  background: transparent;
+  color: #9ca3af;
+  border: 1.5px solid transparent;
+}
+.farm-btn:hover { color: #d1fae5; border-color: #065f46; }
+.active-farm {
+  background: linear-gradient(135deg, #065f46, #047857);
+  color: #d1fae5 !important;
+  border-color: #059669 !important;
+  box-shadow: 0 0 12px rgba(5,150,105,0.35);
+}
+
+/* ── Nav tabs ── */
+.nav-tab { color: #6b7280; background: transparent; }
+.nav-tab:hover { color: #e5e7eb; background: #374151; }
+.active-tab { background: #1d4ed8; color: #fff !important; }
+
+/* ── Period buttons ── */
+.period-btn { color: #6b7280; }
+.period-btn:hover { color: #e5e7eb; background: #374151; }
+.active-period { background: #0f766e; color: #ccfbf1 !important; }
+
+/* ── KPI card hover ── */
+.kpi-card { transition: transform 0.2s, box-shadow 0.2s; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+
+/* ── Chart card ── */
+.chart-card { transition: box-shadow 0.2s; }
+.chart-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+
+/* ── Form ── */
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-label  { font-size: 0.72rem; color: #9ca3af; font-weight: 500; }
+.form-hint   { font-size: 0.65rem; color: #4b5563; }
+.form-input  {
+  background: #111827;
+  border: 1.5px solid #374151;
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: #f3f4f6;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.form-input:focus  { border-color: #7c3aed; box-shadow: 0 0 0 2px rgba(124,58,237,0.2); }
+.form-input:read-only { color: #6b7280; cursor: not-allowed; }
+select.form-input { cursor: pointer; }
+
+/* ── Loading bar animation ── */
+@keyframes loadingBar {
+  0%   { width: 0%; }
+  80%  { width: 90%; }
+  100% { width: 100%; }
+}
+.animate-loading-bar { animation: loadingBar 1.6s ease-in-out forwards; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #111827; }
+::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+/* ── Responsive chart containers ── */
+canvas { max-width: 100%; }
+
+/* ── Result box pulse on update ── */
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+  50%       { box-shadow: 0 0 24px 4px rgba(74, 222, 128, 0.3); }
+}
+.result-pulse { animation: pulse-green 1s ease; }

@@ -1,0 +1,120 @@
+{
+  "Greenhouse": {
+    "intercept": 4.948901098901098,
+    "coefficients": {
+      "Days_After_Transplanting": -6.600845711898622,
+      "Water_Usage_L_per_day": 2.9371740186986113,
+      "Soil_Moisture_pct": 0.19676799752667765,
+      "Temp_Avg_C": 3.1348363589146047,
+      "Solar_Radiation_MJm2": 1.2647213783614384,
+      "EC_dSm": 0.3862291193413948,
+      "Rainfall_mm": 1.050228763205651,
+      "Humidity_pct": -1.8170612209646126,
+      "Growth_Stage_Num": 3.5649654619747317,
+      "Plant_Density_per_ha": 0.0
+    },
+    "scaler_mean": {
+      "Days_After_Transplanting": 106.5,
+      "Water_Usage_L_per_day": 5255.384615384615,
+      "Soil_Moisture_pct": 72.58241758241758,
+      "Temp_Avg_C": 24.39093406593407,
+      "Solar_Radiation_MJm2": 19.055604395604398,
+      "EC_dSm": 1.7565934065934066,
+      "Rainfall_mm": 1.6645054945054945,
+      "Humidity_pct": 57.34725274725275,
+      "Growth_Stage_Num": 3.5164835164835164,
+      "Plant_Density_per_ha": 56000.0
+    },
+    "scaler_std": {
+      "Days_After_Transplanting": 52.53808142671371,
+      "Water_Usage_L_per_day": 1691.181723323007,
+      "Soil_Moisture_pct": 5.102662382135867,
+      "Temp_Avg_C": 4.749294419086817,
+      "Solar_Radiation_MJm2": 5.969356769292782,
+      "EC_dSm": 0.18879443894433756,
+      "Rainfall_mm": 7.805467478483405,
+      "Humidity_pct": 12.536880456217228,
+      "Growth_Stage_Num": 1.2611057189402002,
+      "Plant_Density_per_ha": 1.0
+    },
+    "feature_order": [
+      "Days_After_Transplanting",
+      "Water_Usage_L_per_day",
+      "Soil_Moisture_pct",
+      "Temp_Avg_C",
+      "Solar_Radiation_MJm2",
+      "EC_dSm",
+      "Rainfall_mm",
+      "Humidity_pct",
+      "Growth_Stage_Num",
+      "Plant_Density_per_ha"
+    ],
+    "r2": 0.1139,
+    "mae": 7.4711,
+    "metrics": {
+      "total_yield_kg": 900.7,
+      "harvest_events": 32,
+      "avg_yield_event": 28.146875,
+      "max_yield_event": 72.0
+    }
+  },
+  "OpenField": {
+    "intercept": 3.513186813186813,
+    "coefficients": {
+      "Days_After_Transplanting": -12.900418304444592,
+      "Water_Usage_L_per_day": -20.047679094287187,
+      "Soil_Moisture_pct": 70.18156504366296,
+      "Temp_Avg_C": 4.337223564452856,
+      "Solar_Radiation_MJm2": 1.3842058549008802,
+      "EC_dSm": -49.685281909745655,
+      "Rainfall_mm": -0.5991867322579918,
+      "Humidity_pct": 0.9384584716049222,
+      "Growth_Stage_Num": 37.9351884558767,
+      "Plant_Density_per_ha": 0.0
+    },
+    "scaler_mean": {
+      "Days_After_Transplanting": 106.5,
+      "Water_Usage_L_per_day": 6494.2307692307695,
+      "Soil_Moisture_pct": 59.17032967032967,
+      "Temp_Avg_C": 24.39093406593407,
+      "Solar_Radiation_MJm2": 19.055604395604398,
+      "EC_dSm": 1.522527472527473,
+      "Rainfall_mm": 1.6645054945054945,
+      "Humidity_pct": 57.34725274725275,
+      "Growth_Stage_Num": 3.5164835164835164,
+      "Plant_Density_per_ha": 35000.0
+    },
+    "scaler_std": {
+      "Days_After_Transplanting": 52.53808142671371,
+      "Water_Usage_L_per_day": 2168.583680081263,
+      "Soil_Moisture_pct": 5.2402288874071505,
+      "Temp_Avg_C": 4.749294419086817,
+      "Solar_Radiation_MJm2": 5.969356769292782,
+      "EC_dSm": 0.22406873654262818,
+      "Rainfall_mm": 7.805467478483405,
+      "Humidity_pct": 12.536880456217228,
+      "Growth_Stage_Num": 1.2611057189402002,
+      "Plant_Density_per_ha": 1.0
+    },
+    "feature_order": [
+      "Days_After_Transplanting",
+      "Water_Usage_L_per_day",
+      "Soil_Moisture_pct",
+      "Temp_Avg_C",
+      "Solar_Radiation_MJm2",
+      "EC_dSm",
+      "Rainfall_mm",
+      "Humidity_pct",
+      "Growth_Stage_Num",
+      "Plant_Density_per_ha"
+    ],
+    "r2": 0.24,
+    "mae": 4.5614,
+    "metrics": {
+      "total_yield_kg": 639.4000000000001,
+      "harvest_events": 34,
+      "avg_yield_event": 18.805882352941175,
+      "max_yield_event": 54.7
+    }
+  }
+}

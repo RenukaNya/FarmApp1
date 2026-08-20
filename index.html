@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hatta Smart Farm – IoT Dashboard & Yield Predictor</title>
+  <meta name="description" content="IoT-Based Smart Irrigation Dashboard and Strawberry Yield Predictor for Hatta Model Farm, Dubai UAE"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body class="bg-gray-950 text-gray-100 font-inter min-h-screen">
+
+<!-- ══════════════ TOP NAV ══════════════ -->
+<header class="sticky top-0 z-50 bg-gray-900/90 backdrop-blur border-b border-gray-800 shadow-lg">
+  <div class="max-w-screen-2xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-700 flex items-center justify-center text-xl shadow">🍓</div>
+      <div>
+        <h1 class="text-lg font-bold leading-tight text-white">Hatta Smart Farm</h1>
+        <p class="text-xs text-gray-400">IoT Irrigation Dashboard · Hatta, Dubai, UAE</p>
+      </div>
+    </div>
+    <!-- Farm Selector -->
+    <div class="flex items-center gap-2">
+      <button id="btn-gh" onclick="setFarm('Greenhouse')"
+        class="farm-btn active-farm px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+        🏠 Greenhouse
+      </button>
+      <button id="btn-of" onclick="setFarm('OpenField')"
+        class="farm-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+        🌿 Open Field
+      </button>
+    </div>
+    <!-- Nav tabs -->
+    <nav class="flex gap-1 bg-gray-800 rounded-xl p-1">
+      <button onclick="showTab('dashboard')" id="tab-dashboard"
+        class="nav-tab active-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all">📊 Dashboard</button>
+      <button onclick="showTab('predictor')" id="tab-predictor"
+        class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all">🔮 Yield Predictor</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════ DASHBOARD TAB ══════════════ -->
+<main id="page-dashboard" class="max-w-screen-2xl mx-auto px-4 py-6">
+
+  <!-- Period selector + farm info banner -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div id="farm-badge" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-900/40 border border-green-700/50 text-green-300 text-sm font-medium">
+      <span>🏠</span><span id="farm-label">Greenhouse · Hydroponic · 11,200 Plants · 2,000 m²</span>
+    </div>
+    <div class="flex gap-1 bg-gray-800 rounded-xl p-1">
+      <button onclick="setPeriod('daily')"   id="p-daily"   class="period-btn active-period px-3 py-1.5 rounded-lg text-sm font-medium transition-all">Daily</button>
+      <button onclick="setPeriod('weekly')"  id="p-weekly"  class="period-btn px-3 py-1.5 rounded-lg text-sm font-medium transition-all">Weekly</button>
+      <button onclick="setPeriod('monthly')" id="p-monthly" class="period-btn px-3 py-1.5 rounded-lg text-sm font-medium transition-all">Monthly</button>
+      <button onclick="setPeriod('yearly')"  id="p-yearly"  class="period-btn px-3 py-1.5 rounded-lg text-sm font-medium transition-all">Yearly</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+    <div class="kpi-card bg-gradient-to-br from-green-900/60 to-emerald-900/40 border border-green-700/40 rounded-2xl p-4">
+      <div class="text-2xl mb-1">🍓</div>
+      <div class="text-xs text-gray-400 mb-0.5">Total Yield</div>
+      <div id="kpi-yield" class="text-xl font-bold text-green-400">—</div>
+      <div class="text-xs text-gray-500">kg season</div>
+    </div>
+    <div class="kpi-card bg-gradient-to-br from-blue-900/60 to-cyan-900/40 border border-blue-700/40 rounded-2xl p-4">
+      <div class="text-2xl mb-1">🌡️</div>
+      <div class="text-xs text-gray-400 mb-0.5">Avg Temperature</div>
+      <div id="kpi-temp" class="text-xl font-bold text-blue-400">—</div>
+      <div class="text-xs text-gray-500">°C</div>
+    </div>
+    <div class="kpi-card bg-gradient-to-br from-sky-900/60 to-blue-900/40 border border-sky-700/40 rounded-2xl p-4">
+      <div class="text-2xl mb-1">💧</div>
+      <div class="text-xs text-gray-400 mb-0.5">Total Water Used</div>
+      <div id="kpi-water" class="text-xl font-bold text-sky-400">—</div>
+      <div class="text-xs text-gray-500">m³ season</div>
+    </div>
+    <div class="kpi-card bg-gradient-to-br from-yellow-900/60 to-orange-900/40 border border-yellow-700/40 rounded-2xl p-4">
+      <div class="text-2xl mb-1">☀️</div>
+      <div class="text-xs text-gray-400 mb-0.5">Avg Solar Rad.</div>
+      <div id="kpi-solar" class="text-xl font-bold text-yellow-400">—</div>
+      <div class="text-xs text-gray-500">MJ/m²/day</div>
+    </div>
+    <div class="kpi-card bg-gradient-to-br from-purple-900/60 to-violet-900/40 border border-purple-700/40 rounded-2xl p-4">
+      <div class="text-2xl mb-1">🌧️</div>
+      <div class="text-xs text-gray-400 mb-0.5">Total Rainfall</div>
+      <div id="kpi-rain" class="text-xl font-bold text-purple-400">—</div>
+      <div class="text-xs text-gray-500">mm season</div>
+    </div>
+    <div class="kpi-card bg-gradient-to-br from-rose-900/60 to-pink-900/40 border border-rose-700/40 rounded-2xl p-4">
+      <div class="text-2xl mb-1">🌱</div>
+      <div class="text-xs text-gray-400 mb-0.5">Harvest Events</div>
+      <div id="kpi-events" class="text-xl font-bold text-rose-400">—</div>
+      <div class="text-xs text-gray-500">times</div>
+    </div>
+  </div>
+
+  <!-- Charts Row 1 -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">🍓 Yield & Cumulative Yield</h3>
+      <div style="max-height:260px"><canvas id="chart-yield"></canvas></div>
+    </div>
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">🌡️ Temperature (Avg / Min / Max)</h3>
+      <div style="max-height:260px"><canvas id="chart-temp"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Charts Row 2 -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">💧 Daily Water Usage (L)</h3>
+      <div style="max-height:220px"><canvas id="chart-water"></canvas></div>
+    </div>
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">🌧️ Rainfall (mm)</h3>
+      <div style="max-height:220px"><canvas id="chart-rain"></canvas></div>
+    </div>
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">☀️ Solar Radiation (MJ/m²)</h3>
+      <div style="max-height:220px"><canvas id="chart-solar"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Charts Row 3 -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">💦 Soil Moisture (%)</h3>
+      <div style="max-height:220px"><canvas id="chart-moisture"></canvas></div>
+    </div>
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">⚡ EC Level (dS/m)</h3>
+      <div style="max-height:220px"><canvas id="chart-ec"></canvas></div>
+    </div>
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">💨 Wind Speed (m/s) & Humidity (%)</h3>
+      <div style="max-height:220px"><canvas id="chart-wind"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Charts Row 4 -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">🌿 PAR – Photosynthetically Active Radiation (W/m²)</h3>
+      <div style="max-height:240px"><canvas id="chart-par"></canvas></div>
+    </div>
+    <div class="chart-card bg-gray-900 border border-gray-800 rounded-2xl p-4">
+      <h3 class="text-sm font-semibold text-gray-300 mb-3">📅 Yield by Growth Stage</h3>
+      <div style="max-height:240px"><canvas id="chart-stage"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Data source note -->
+  <p class="text-xs text-gray-600 text-center mt-4">
+    Climate data: NASA POWER (Lat 24.81°N, Lon 56.11°E) · Yield data: Hatta Farm records · Season 2025–2026
+  </p>
+</main>
+
+<!-- ══════════════ PREDICTOR TAB ══════════════ -->
+<main id="page-predictor" class="hidden max-w-screen-xl mx-auto px-4 py-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Left: Input Form -->
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-lg">🔮</div>
+        <div>
+          <h2 class="text-lg font-bold text-white">Strawberry Yield Predictor</h2>
+          <p class="text-xs text-gray-400">Linear Regression Model · Enter current farm conditions</p>
+        </div>
+      </div>
+
+      <!-- Model info badge -->
+      <div id="model-badge" class="mb-5 px-3 py-2 rounded-xl bg-violet-900/30 border border-violet-700/40 text-xs text-violet-300 flex gap-4 flex-wrap">
+        <span>📐 Algorithm: <strong>Linear Regression</strong></span>
+        <span id="badge-r2">R²: —</span>
+        <span id="badge-mae">MAE: — kg</span>
+      </div>
+
+      <form id="predict-form" class="space-y-4" onsubmit="return false">
+        <div class="grid grid-cols-2 gap-3">
+
+          <div class="form-group">
+            <label class="form-label">📅 Days After Transplanting</label>
+            <input type="number" id="f-dat" class="form-input" placeholder="e.g. 75" min="1" max="200" value="75"/>
+            <span class="form-hint">1 – 200 days</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🌱 Growth Stage</label>
+            <select id="f-stage" class="form-input">
+              <option value="1">1 – Early (DAT ≤30)</option>
+              <option value="2">2 – Vegetative (31–60)</option>
+              <option value="3" selected>3 – Flowering (61–90)</option>
+              <option value="4">4 – Fruiting (91–150)</option>
+              <option value="5">5 – End Season (151+)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">💧 Water Usage (L/day)</label>
+            <input type="number" id="f-water" class="form-input" placeholder="e.g. 5600" step="100" value="5600"/>
+            <span class="form-hint">Total farm (L/day)</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">💦 Soil Moisture (%)</label>
+            <input type="number" id="f-moisture" class="form-input" placeholder="e.g. 75" min="10" max="100" step="0.5" value="75"/>
+            <span class="form-hint">Volumetric water content</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">🌡️ Temperature (°C)</label>
+            <input type="number" id="f-temp" class="form-input" placeholder="e.g. 22" step="0.1" value="22"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">☀️ Solar Radiation (MJ/m²)</label>
+            <input type="number" id="f-solar" class="form-input" placeholder="e.g. 18" step="0.1" value="18"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">⚡ EC Level (dS/m)</label>
+            <input type="number" id="f-ec" class="form-input" placeholder="e.g. 1.8" step="0.1" value="1.8" min="0.5" max="5"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🌧️ Rainfall (mm)</label>
+            <input type="number" id="f-rain" class="form-input" placeholder="e.g. 0" step="0.1" value="0" min="0"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">💨 Humidity (%)</label>
+            <input type="number" id="f-humidity" class="form-input" placeholder="e.g. 55" min="10" max="100" step="1" value="55"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🌿 Plant Density (plants/ha)</label>
+            <input type="number" id="f-density" class="form-input" placeholder="e.g. 56000" step="100" value="56000" readonly/>
+            <span class="form-hint">Auto-set by farm type</span>
+          </div>
+
+        </div>
+
+        <button onclick="predictYield()" type="button"
+          class="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold text-base transition-all shadow-lg shadow-purple-900/40">
+          🔮 Predict Yield
+        </button>
+      </form>
+    </div>
+
+    <!-- Right: Result + Explanation -->
+    <div class="space-y-4">
+
+      <!-- Prediction Result -->
+      <div id="result-box" class="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center">
+        <div class="text-4xl mb-3">🍓</div>
+        <p class="text-gray-400 text-sm mb-2">Predicted Yield</p>
+        <div id="result-value" class="text-6xl font-black text-green-400 mb-1">—</div>
+        <div class="text-gray-400 text-sm">kg / harvest event</div>
+        <div id="result-range" class="mt-3 text-xs text-gray-500">Enter values and click Predict</div>
+        <div id="result-stage-info" class="mt-2 hidden px-3 py-1.5 rounded-lg bg-gray-800 text-xs text-gray-300 inline-block"></div>
+      </div>
+
+      <!-- LR Equation -->
+      <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+        <h3 class="text-sm font-semibold text-gray-300 mb-3">📐 Linear Regression Model</h3>
+        <div class="bg-gray-800 rounded-xl p-3 text-xs font-mono text-blue-300 overflow-x-auto">
+          <div>Ŷ = β₀ + β₁·x₁* + β₂·x₂* + ... + β₁₀·x₁₀*</div>
+          <div class="text-gray-500 mt-1">( xᵢ* = (xᵢ − μᵢ) / σᵢ  — standardized features )</div>
+        </div>
+        <div id="coef-table" class="mt-3 space-y-1"></div>
+      </div>
+
+      <!-- Feature Contribution -->
+      <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+        <h3 class="text-sm font-semibold text-gray-300 mb-3">📊 Feature Contributions (Current Input)</h3>
+        <div style="max-height:240px"><canvas id="chart-contrib"></canvas></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Historical predictions chart -->
+  <div class="mt-4 bg-gray-900 border border-gray-800 rounded-2xl p-5">
+    <h3 class="text-sm font-semibold text-gray-300 mb-3">📈 Actual vs. Predicted Yield (Full Season)</h3>
+    <div style="max-height:260px"><canvas id="chart-actual-vs-pred"></canvas></div>
+  </div>
+</main>
+
+<!-- Loading Overlay -->
+<div id="loading" class="fixed inset-0 bg-gray-950/80 backdrop-blur flex flex-col items-center justify-center z-50">
+  <div class="text-5xl animate-bounce mb-4">🍓</div>
+  <div class="text-white font-semibold text-lg">Loading Farm Data…</div>
+  <div class="text-gray-400 text-sm mt-1">Fetching NASA POWER data · Building models</div>
+  <div class="mt-4 w-48 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+    <div class="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full animate-loading-bar"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
